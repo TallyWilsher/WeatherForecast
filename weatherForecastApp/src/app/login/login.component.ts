@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AuthService } from '../auth.service';
 
 
 @Component({
@@ -11,8 +12,9 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 })
 export class LoginComponent {
   loginForm!: FormGroup;
+  passwordFieldType: string = 'password';
 
-  constructor(private formBuilder: FormBuilder) { }
+  constructor(private formBuilder: FormBuilder, private authService: AuthService) { }
 
   ngOnInit(): void {
     this.loginForm = this.formBuilder.group({
@@ -25,8 +27,22 @@ export class LoginComponent {
     if (this.loginForm.valid) {
       const username = this.loginForm.get('username')?.value;
       const password = this.loginForm.get('password')?.value;
-      // Here you can add your login validation logic
-      console.log("Username: " + username + ", Password: " + password);
+      if (username && password) {
+        this.authService.login(username, password).subscribe(
+          response => {
+            console.log('Login successful', response);
+            // Handle successful login (e.g., redirect, store token, etc.)
+          },
+          error => {
+            console.error('Login failed', error);
+            // Handle login error
+          }
+        );
+      }
     }
+  }
+
+  togglePasswordVisibility() {
+    this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password';
   }
 }

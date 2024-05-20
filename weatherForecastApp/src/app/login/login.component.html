@@ -3,7 +3,14 @@
     <h2 class="login-title">Log in to your account</h2>
     <form [formGroup]="loginForm" (ngSubmit)="login()">
         <input type="text" formControlName="username" placeholder="Username">
-        <input type="password" formControlName="password" placeholder="Password">
+
+        <div class="password-container">
+            <input [type]="passwordFieldType" formControlName="password" placeholder="Password">
+            <i class="toggle-password" (click)="togglePasswordVisibility()">
+                {{ passwordFieldType === 'password' ? 'Show' : 'Hide' }}
+            </i>
+        </div>
+        
         <button type="submit" [disabled]="loginForm.invalid">Log In</button>
     </form>
 </div>
